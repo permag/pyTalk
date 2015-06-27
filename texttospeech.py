@@ -23,10 +23,10 @@ REPLACE_WORDS =  {
     }
 
 class TextToSpeech:
-    def __init__(self, text=None):
+    def __init__(self, text=None, language=None):
         self._sound = None
         if text:
-            self.say(text)
+            self.say(text, language)
 
 
     @property
@@ -95,6 +95,9 @@ class TextToSpeech:
 if __name__ == '__main__':
     # Text string to speak, from argument.
     text = None
+    language = 'sv'
     if len(sys.argv) > 1:
         text = sys.argv[1]
-    TextToSpeech(text)
+    if len(sys.argv) > 2:
+        language = sys.argv[2]
+    TextToSpeech(text, language)
