@@ -8,10 +8,25 @@ import time
 import vlc
 
 MP3_FILE = 'speech.mp3'
+REPLACE_WORDS =  {
+    'koktpotatis':  'kokad potatis',
+    'kokt': 'kokad',
+    'bacon': 'bäjkån',
+    'slungad': 'slungadd',
+    'gravad': 'graavadd',
+    'hovmästarsås': 'hovmästare-sås',
+    'buffe': 'bufé',
+    'chili': 'kili',
+    'skaldjursgratinerad': 'skaldjurs-grattinn-érrad',
+    'gratinerad': 'gratt-i-nérad',
+    'nötter': 'nött-err',
+    }
 
 class TextToSpeech:
-    def __init__(self):
+    def __init__(self, text=None):
         self._sound = None
+        if text:
+            self.say(text)
 
 
     @property
@@ -32,6 +47,7 @@ class TextToSpeech:
 
 
     def get_sound_response(self, text, language):
+        text = self.pronunciation_fix(text)
         # url encode text
         text_encoded = urllib.quote_plus(text)[:150]  # limit chars
         url_base = 'http://translate.google.com/translate_tts'
@@ -68,6 +84,16 @@ class TextToSpeech:
         return size_k
 
 
+    def pronunciation_fix(self, text):
+        for i, j in REPLACE_WORDS.iteritems():
+            text = text.replace(i, j)
+        return text
+
+
+
 
 if __name__ == '__main__':
-    TextToSpeech()
+    # URL to read, from argument
+    if len(sys.argv) > 1:
+        text = sys.argv[1]
+    TextToSpeech(text)

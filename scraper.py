@@ -28,7 +28,7 @@ def main(url):
             if not ref:
                 ref = res.find_next(text=True)
             else:
-                if ref != current_day:
+                if ref.encode('utf-8') != current_day:
                     ref_str = ref.encode('utf-8').lower()
                     if (ref_str == 'måndag' or ref_str == 'tisdag' or
                         ref_str == 'onsdag' or ref_str == 'torsdag' or
@@ -69,18 +69,18 @@ def get_today_as_string():
     today = None
 
     # for testing on weekend
-    today_nr = 1
+    # today_nr = 1
 
     if today_nr == 0:
-        today = u'Måndag'
+        today = 'Måndag'
     elif today_nr == 1:
-        today = u'Tisdag'
+        today = 'Tisdag'
     elif today_nr == 2:
-        today = u'Onsdag'
+        today = 'Onsdag'
     elif today_nr == 3:
-        today = u'Torsdag'
+        today = 'Torsdag'
     elif today_nr == 4:
-        today = u'Fredag'
+        today = 'Fredag'
     elif today_nr == 5 or today_nr == 6:
         today = 'Helg'
     return today
