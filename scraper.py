@@ -54,10 +54,10 @@ def main(url):
     # text_list[3] DISH 3
     # ...
 
-    # remove day
-    text_list.pop(0)
-
-    return text_list
+    if len(text_list):
+        # remove day
+        text_list.pop(0)
+        return text_list
 
 
 def get_text_list(url):
@@ -69,7 +69,7 @@ def get_today_as_string():
     today = None
 
     # for testing on weekend
-    today_nr = 4
+    # today_nr = 4
 
     if today_nr == 0:
         today = u'Måndag'
@@ -81,6 +81,8 @@ def get_today_as_string():
         today = u'Torsdag'
     elif today_nr == 4:
         today = u'Fredag'
+    elif today_nr == 4 or today_nr == 5:
+        today = 'Helg'
     return today
 
 
