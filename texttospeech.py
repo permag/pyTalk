@@ -93,7 +93,8 @@ class TextToSpeech:
 
 
 if __name__ == '__main__':
-    # URL to read, from argument
+    # Text string to speak, from argument.
+    text = None
     if len(sys.argv) > 1:
         text = sys.argv[1]
     TextToSpeech(text)
