@@ -81,7 +81,7 @@ def get_today_as_string():
         today = u'Torsdag'
     elif today_nr == 4:
         today = u'Fredag'
-    elif today_nr == 4 or today_nr == 5:
+    elif today_nr == 5 or today_nr == 6:
         today = 'Helg'
     return today
 
