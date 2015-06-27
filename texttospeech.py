@@ -7,48 +7,63 @@ import os
 import time
 import vlc
 
-MP3_FILE = 'food.mp3'
+MP3_FILE = 'speech.mp3'
 
-def main(text):
-    # get sound response from translate api
-    sound_response = get_sound_response(text)
-
-    # write response to file
-    file_to_play = write_file(sound_response)
-
-    # play sound file
-    play_sound_file(file_to_play)
+class TextToSpeech:
+    def __init__(self):
+        self._sound = None
 
 
-def say(text):
-    main(text)
+    @property
+    def sound(self):
+        return self._sound
 
 
-def get_sound_response(text, language='sv'):
-    text_encoded = urllib.quote_plus(text)
-    url_base = 'http://translate.google.com/translate_tts'
-    lang = '?tl={0}'.format(language)
-    query = '&q={0}'.format(text_encoded)
-    # url encode text
-    url = '{0}{1}{2}'.format(url_base, lang, query)
-    opener = urllib2.build_opener()
-    opener.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36')]
-    response = opener.open(url)
-    return response.read()
+    def say(self, text, language='sv'):
+        text = text.lower()
+        # get sound response from translate api
+        sound_response = self.get_sound_response(text, language)
+
+        # write response to file
+        file_to_play = self.write_file(sound_response)
+
+        # play sound file
+        self.play_sound_file(file_to_play)
 
 
-def play_sound_file(file_to_play):
-    p = vlc.MediaPlayer(file_to_play)
-    p.play()
+    def get_sound_response(self, text, language):
+        # url encode text
+        text_encoded = urllib.quote_plus(text)
+        url_base = 'http://translate.google.com/translate_tts'
+        lang = '?tl={0}'.format(language)
+        query = '&q={0}'.format(text_encoded)
+        url = '{0}{1}{2}'.format(url_base, lang, query)
+        opener = urllib2.build_opener()
+        opener.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36')]
+        response = opener.open(url)
+        return response.read()
 
 
-def write_file(sound_response):
-    f = open(MP3_FILE,'wb')
-    f.write(sound_response)
-    f.close()
-    return MP3_FILE
+    def play_sound_file(self, file_to_play):
+        self._sound = vlc.MediaPlayer(file_to_play)
+        self._sound.play()
+        time.sleep(self.mp3_len())
+        self._sound.stop()
+
+
+    def write_file(self, sound_response):
+        f = open(MP3_FILE,'wb')
+        f.write(sound_response)
+        f.close()
+        return MP3_FILE
+
+
+    def mp3_len(self):
+        ''' return size in seconds of mp3 file '''
+        size_k = (os.path.getsize(MP3_FILE) / 1000) / 4
+        return size_k + 0.5
 
 
 
 if __name__ == '__main__':
-    main()
+    TextToSpeech()

@@ -2,15 +2,12 @@
 # -*- coding: utf-8 -*-
 import sys
 import urllib2
-from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 import datetime
 
 
-def main():
+def main(url):
     ''' Kvartersmenyn scrape on restaurant level '''
-    # tegel test
-    url = 'http://www.kvartersmenyn.se/rest/13586'
 
     try:
         html = urllib2.urlopen(url)
@@ -21,14 +18,12 @@ def main():
         sys.exit()
 
     days_data = [];
-
     soup = BeautifulSoup(data, 'html.parser')
-    # print(soup.prettify())
     current_day = get_today_as_string()
     res = soup.find('strong', text=current_day)
     ref = None
     refs = []
-    for i in range(15):
+    for i in range(9):
         if not ref:
             ref = res.find_next(text=True)
         else:
@@ -49,27 +44,28 @@ def main():
 
 
     # text_list structure:
-    # text_list[0] DAY
+    # ### text_list[0] DAY
     # text_list[1] DISH 1
     # text_list[2] DISH 2
     # text_list[3] DISH 3
     # ...
 
+    # remove day
+    text_list.pop(0)
+
     return text_list
 
 
-def get_text_list():
-    return main()
+def get_text_list(url):
+    return main(url)
 
 
 def get_today_as_string():
-    datetime.datetime.today()
-    datetime.datetime(2012, 3, 23, 23, 24, 55, 173504)
     today_nr = datetime.datetime.today().weekday()
     today = None
 
     # for testing on weekend
-    today_nr = 2
+    today_nr = 4
 
     if today_nr == 0:
         today = u'Måndag'
