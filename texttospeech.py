@@ -61,7 +61,7 @@ class TextToSpeech:
     def mp3_len(self):
         ''' return size in seconds of mp3 file '''
         size_k = (os.path.getsize(MP3_FILE) / 1000) / 4
-        return size_k + 0.5
+        return size_k
 
 
 

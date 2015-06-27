@@ -6,8 +6,8 @@ import scraper
 from texttospeech import TextToSpeech
 
 JSON_DATA_FILE = 'data.json'
-INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! {2}. . .'
-INTRO_SUB_ALT = 'Tisdag... ja just det, gå till Grand.'
+INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! . . .'
+OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
 
 def main():
     tts = TextToSpeech()
@@ -19,19 +19,15 @@ def main():
     for item in data:
         read_restaurant_menu(tts, item)
 
+    if scraper.get_today_as_string() == 'Tisdag':
+        tts.say(OUTRO_SPECIAL)
 
 def say_intro(tts):
     time_now = str(datetime.datetime.now().time())[:5]
     # intro
     day_now = scraper.get_today_as_string()
-    if day_now == 'Tisdag':
-        intro =  INTRO.format(day_now, time_now, INTRO_SUB_ALT)
-        tts.say(intro)
-        sys.exit(0)
-    else:
-        intro = INTRO.format(day_now, time_now, '')
-        tts.say(intro)
-
+    intro = INTRO.format(day_now, time_now)
+    tts.say(intro)
 
 
 def get_restaurants():
