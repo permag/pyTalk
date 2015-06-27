@@ -36,7 +36,9 @@ def say_intro(tts):
 
 def get_restaurants():
     '''
-        returns dict: {name: 'Name of restaurant', url: 'http://'}
+        returns dict: {name: 'Name of restaurant',
+                       name_pronunciation: 'Name with pronunciation help',
+                       url: 'http://to.scrape'}
     '''
     with open(JSON_DATA_FILE) as data_file:
         data = json.load(data_file)
@@ -48,6 +50,8 @@ def get_restaurants():
 
 def read_restaurant_menu(tts, restaurant_item):
     text_list = scraper.get_text_list(restaurant_item['url'])
+    if not text_list:
+        return
     print('\n********* Restaurat: {0} *********'.format(restaurant_item['name']))
     i = 0
     for text in text_list:
