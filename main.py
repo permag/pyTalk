@@ -6,9 +6,9 @@ import scraper
 from texttospeech import TextToSpeech
 
 JSON_DATA_FILE = 'data.json'
+PRONUNCIATION_FILE = 'pronunciation/sv.json'
 INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! . . .'
 OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
-PRONUNCIATION_FILE = 'pronunciation/sv.json'
 
 
 def main():

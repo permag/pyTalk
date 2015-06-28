@@ -67,9 +67,8 @@ def get_text_list(url):
 def get_today_as_string():
     today_nr = datetime.datetime.today().weekday()
     today = None
-
     # for testing on weekend
-    today_nr = 1
+    # today_nr = 1
 
     if today_nr == 0:
         today = 'Måndag'
