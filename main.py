@@ -65,4 +65,10 @@ def read_restaurant_menu(tts, restaurant_item):
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('\nProgram exit.\n')
+        sys.exit(0)
+    except:
+        sys.exit(1)

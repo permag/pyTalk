@@ -117,4 +117,10 @@ if __name__ == '__main__':
         language = sys.argv[2]
     if len(sys.argv) > 3:
         pronunciation_file = sys.argv[3]
-    TextToSpeech(text, language, pronunciation_file)
+    try:
+        TextToSpeech(text, language, pronunciation_file)
+    except KeyboardInterrupt:
+        print('\nProgram exit.\n')
+        sys.exit(0)
+    except:
+        sys.exit(1)
