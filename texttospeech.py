@@ -1,30 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import urllib
-import urllib2
 import sys
 import os
 import time
+import urllib
+import urllib2
+import json
 import vlc
 
 MP3_FILE = 'speech.mp3'
-REPLACE_WORDS =  {
-    'koktpotatis':  'kokad potatis',
-    'kokt': 'kokad',
-    'bacon': 'bäjkån',
-    'slungad': 'slungadd',
-    'gravad': 'graavadd',
-    'hovmästarsås': 'hovmästare-sås',
-    'buffe': 'bufé',
-    'chili': 'kili',
-    'skaldjursgratinerad': 'skaldjurs-grattinn-érrad',
-    'gratinerad': 'gratt-i-nérad',
-    'nötter': 'nött-err',
-    }
 
 class TextToSpeech:
-    def __init__(self, text=None, language=None):
+
+    def __init__(self, text=None, language=None, pronunciation_file=None):
         self._sound = None
+        self._pronunciation_words = {}
+        self._do_fix_pronunciation = False
+        if pronunciation_file:
+            self.set_pronunciation_data(pronunciation_file)
+            self._do_fix_pronunciation = True
         if text:
             self.say(text, language)
 
@@ -47,7 +41,8 @@ class TextToSpeech:
 
 
     def get_sound_response(self, text, language):
-        text = self.pronunciation_fix(text)
+        if self._do_fix_pronunciation:
+            text = self.pronunciation_fix(text)
         # url encode text
         text_encoded = urllib.quote_plus(text)[:150]  # limit chars
         url_base = 'http://translate.google.com/translate_tts'
@@ -85,9 +80,28 @@ class TextToSpeech:
 
 
     def pronunciation_fix(self, text):
-        for i, j in REPLACE_WORDS.iteritems():
+        for i, j in self._pronunciation_words.iteritems():
             text = text.replace(i, j)
         return text
+
+
+    def set_pronunciation_data(self, filename):
+        with open(filename) as data_file:
+            data = json.load(data_file)
+        data = self.byteify(data)
+        self._pronunciation_words = data
+
+
+
+    def byteify(self, data):
+        if isinstance(data, dict):
+            return {self.byteify(key): self.byteify(value) for key, value in data.iteritems()}
+        elif isinstance(data, list):
+            return [self.byteify(element) for element in data]
+        elif isinstance(data, unicode):
+            return data.encode('utf-8')
+        else:
+            return data
 
 
 
@@ -96,8 +110,11 @@ if __name__ == '__main__':
     # Text string to speak, from argument.
     text = None
     language = 'sv'
+    pronunciation_file = None
     if len(sys.argv) > 1:
         text = sys.argv[1]
     if len(sys.argv) > 2:
         language = sys.argv[2]
-    TextToSpeech(text, language)
+    if len(sys.argv) > 3:
+        pronunciation_file = sys.argv[3]
+    TextToSpeech(text, language, pronunciation_file)

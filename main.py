@@ -8,9 +8,11 @@ from texttospeech import TextToSpeech
 JSON_DATA_FILE = 'data.json'
 INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! . . .'
 OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
+PRONUNCIATION_FILE = 'pronunciation/sv.json'
+
 
 def main():
-    tts = TextToSpeech()
+    tts = TextToSpeech(None, 'sv', PRONUNCIATION_FILE)
     # intro
     say_intro(tts)
 
@@ -21,6 +23,7 @@ def main():
 
     if scraper.get_today_as_string() == 'Tisdag':
         tts.say(OUTRO_SPECIAL)
+
 
 def say_intro(tts):
     time_now = str(datetime.datetime.now().time())[:5]
