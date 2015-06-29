@@ -37,7 +37,7 @@ def main(url):
                 refs.append(ref)
                 ref = ref.find_next(text=True)
     except:
-        print('Could not prase tag.')
+        print('\nCould not prarse tag ({0})\n'.format(url))
         return None
 
     text_list = []
