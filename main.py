@@ -4,6 +4,7 @@ import sys, time, datetime
 import json
 import scraper
 from texttospeech import TextToSpeech
+import forecast
 
 JSON_DATA_FILE = 'data.json'
 PRONUNCIATION_FILE = 'pronunciation/sv.json'
@@ -13,6 +14,7 @@ OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
 
 def main():
     tts = TextToSpeech(None, 'sv', PRONUNCIATION_FILE)
+    weather = forecast.get()
     # intro
     say_intro(tts)
 
@@ -21,8 +23,23 @@ def main():
     for item in data:
         read_restaurant_menu(tts, item)
 
+    # say weather
+    say_weather(weather, tts)
+
+    # Tuesday message
     if scraper.get_today_as_string() == 'Tisdag':
         tts.say(OUTRO_SPECIAL)
+
+
+def say_weather(weather, tts):
+    if weather:
+        if (weather[0] == 'light rain showers' or weather[0] == 'rain showers' or
+            weather[0] == 'heavy rain showers' or weather[0] == 'showers'):
+            tts.say(''' . Och så lite väder. Just nu är det {0}, så det kanske
+                        är bäst att ni gå till Tegel idag då . . .'''.format(weather[1]))
+        else:
+            tts.say(''' . Och så lite väder. Just nu är det {0}, så ni kan väl
+                        gå vart ni vill.'''.format(weather[1]))
 
 
 def say_intro(tts):
