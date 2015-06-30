@@ -3,8 +3,7 @@
 import urllib2
 from bs4 import BeautifulSoup
 
-def main():
-    url = 'http://www.yr.no/place/Sverige/Västra_Götaland/Mölndal/forecast.xml'
+def main(url):
     symbols_dict = {
         'clear sky': 'solsken',
         'fair': 'sol och lite moln',
@@ -36,8 +35,8 @@ def main():
     else:
         return None
 
-def get():
-    return main()
+def get(url):
+    return main(url)
 
 
 if __name__ == '__main__':

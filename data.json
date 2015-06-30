@@ -1,17 +1,21 @@
-[
-  {
-    "name": "Lunchmästar´n",
-    "name_pronunciation": "Lunchmästarn",
-    "url": "http://www.kvartersmenyn.se/rest/13537"
-  },
-  {
-    "name": "Gaffelgott",
-    "name_pronunciation": "Gafffel-gått",
-    "url": "http://www.kvartersmenyn.se/rest/7705"
-  },
-  {
-    "name": "Tegel",
-    "name_pronunciation": "Tegel",
-    "url": "http://www.kvartersmenyn.se/rest/13586"
+ {
+  "restaurants":
+    [
+      {
+        "name": "Lunchmästar´n",
+        "name_pronunciation": "Lunchmästarn",
+        "url": "http://www.kvartersmenyn.se/rest/13537"
+      },
+      {
+        "name": "Gaffelgott",
+        "name_pronunciation": "Gafffel-gått",
+        "url": "http://www.kvartersmenyn.se/rest/7705"
+      },
+      {
+        "name": "Tegel",
+        "name_pronunciation": "Tegel",
+        "url": "http://www.kvartersmenyn.se/rest/13586"
+      }
+    ],
+    "forecast_url": "http://www.yr.no/place/Sverige/Västra_Götaland/Mölndal/forecast.xml"
   }
-]

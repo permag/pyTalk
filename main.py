@@ -11,16 +11,15 @@ PRONUNCIATION_FILE = 'pronunciation/sv.json'
 INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! . . .'
 OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
 
-
 def main():
     tts = TextToSpeech(None, 'sv', PRONUNCIATION_FILE)
-    weather = forecast.get()
+    data = get_restaurants()
+    weather = forecast.get(data['forecast_url'].encode('utf-8'))
     # intro
     say_intro(tts)
 
     # get restaurants
-    data = get_restaurants()
-    for item in data:
+    for item in data['restaurants']:
         read_restaurant_menu(tts, item)
 
     # say weather
@@ -58,7 +57,7 @@ def get_restaurants():
     '''
     with open(JSON_DATA_FILE) as data_file:
         data = json.load(data_file)
-    for d in data:
+    for d in data['restaurants']:
         d['name'] = d['name'].encode('utf-8')
         d['name_pronunciation'] = d['name_pronunciation'].encode('utf-8')
     return data
