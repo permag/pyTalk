@@ -29,7 +29,6 @@ def main(url):
 
     symbol_name = forecast.symbol['name'].lower()
 
-
     if symbol_name in symbols_dict:
         return (symbol_name, symbols_dict[symbol_name])
     else:

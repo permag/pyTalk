@@ -11,16 +11,27 @@ PRONUNCIATION_FILE = 'pronunciation/sv.json'
 INTRO = ' . Nu är det {0} och klockan är {1}, och det är dags för lunch! . . .'
 OUTRO_SPECIAL = 'Tisdag... ja just det, gå till Grand.'
 
-def main():
+def main(mode):
     tts = TextToSpeech(None, 'sv', PRONUNCIATION_FILE)
     data = get_restaurants()
     weather = forecast.get(data['forecast_url'].encode('utf-8'))
+
+    # mode
+    if mode == 'suggestions':
+        tts.say('. Här kommer några förslag:')
+        for item in data['restaurants']:
+            read_restaurant_menu(tts, item, mode, data['prefered'])
+        return
+    elif mode == 'weather':
+        say_weather(weather, tts)
+        return
+
     # intro
     say_intro(tts)
 
     # get restaurants
     for item in data['restaurants']:
-        read_restaurant_menu(tts, item)
+        read_restaurant_menu(tts, item, mode, None)
 
     # say weather
     say_weather(weather, tts)
@@ -34,11 +45,9 @@ def say_weather(weather, tts):
     if weather:
         if (weather[0] == 'light rain showers' or weather[0] == 'rain showers' or
             weather[0] == 'heavy rain showers' or weather[0] == 'showers'):
-            tts.say(''' . Och så lite väder. Just nu är det {0}, så det kanske
-                        är bäst att ni gå till Tegel idag då . . .'''.format(weather[1]))
+            tts.say(' . Och så lite väder. Just nu är det {0}, så det kanske är bäst att ni gå till Tegel idag då . . .'.format(weather[1]))
         else:
-            tts.say(''' . Och så lite väder. Just nu är det {0}, så ni kan väl
-                        gå vart ni vill.'''.format(weather[1]))
+            tts.say(' . Och så lite väder. Just nu är det {0}, så ni kan väl gå vart ni vill.'.format(weather[1]))
 
 
 def say_intro(tts):
@@ -50,11 +59,6 @@ def say_intro(tts):
 
 
 def get_restaurants():
-    '''
-        returns dict: {name: 'Name of restaurant',
-                       name_pronunciation: 'Name with pronunciation help',
-                       url: 'http://to.scrape'}
-    '''
     with open(JSON_DATA_FILE) as data_file:
         data = json.load(data_file)
     for d in data['restaurants']:
@@ -63,26 +67,53 @@ def get_restaurants():
     return data
 
 
-def read_restaurant_menu(tts, restaurant_item):
+def read_restaurant_menu(tts, restaurant_item, mode, prefered):
     text_list = scraper.get_text_list(restaurant_item['url'])
     if not text_list:
         return
+    if mode == 'suggestions':
+        say_suggestions(tts, restaurant_item['name_pronunciation'], text_list, prefered)
     print('\n********* Restaurant: {0} *********'.format(restaurant_item['name']))
     i = 0
     for text in text_list:
-        print(text)
         i += 1
-        if i is 1:
-            tts.say('{0}. {1}'.format(restaurant_item['name_pronunciation'], text))
-        else:
-            tts.say('. {0}'.format(text))
+        print(text)
+        if mode == 'menu':
+            if i is 1:
+                tts.say('{0}. {1}'.format(restaurant_item['name_pronunciation'], text))
+            else:
+                tts.say('. {0}'.format(text))
 
+
+
+def say_suggestions(tts, name, text_list, prefered):
+    do_break = False
+    for pref in prefered:
+        for s in pref:
+            s = s.encode('utf-8')
+            for text in text_list:
+                text = text.lower()
+                if text.find(s) != -1:
+                    do_break = True
+                    tts.say('På {0} är det {1}.'.format(name, text));
+            if do_break:
+                do_break = False
+                break
 
 
 
 if __name__ == '__main__':
+    '''
+        modes:
+            menu (default)
+            weather
+            suggestions
+    '''
+    mode = 'menu'
+    if len(sys.argv) > 1:
+        mode = sys.argv[1]
     try:
-        main()
+        main(mode)
     except KeyboardInterrupt:
         print('\nProgram exit.\n')
         sys.exit(0)

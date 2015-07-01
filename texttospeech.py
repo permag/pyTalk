@@ -92,7 +92,6 @@ class TextToSpeech:
         self._pronunciation_words = data
 
 
-
     def byteify(self, data):
         if isinstance(data, dict):
             return {self.byteify(key): self.byteify(value) for key, value in data.iteritems()}
