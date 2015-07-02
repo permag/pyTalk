@@ -43,8 +43,9 @@ class TextToSpeech:
     def get_sound_response(self, text, language):
         if self._do_fix_pronunciation:
             text = self.pronunciation_fix(text)
-        # url encode text
-        text_encoded = urllib.quote_plus(text)[:150]  # limit chars
+        text = text[:160]  # max length 160 chars
+        text = text.rsplit(' ', 1)[0]  # remove last word that may be broken word.
+        text_encoded = text.replace(' ', '+')  # replace space with +.
         url_base = 'http://translate.google.com/translate_tts'
         lang = '?tl={0}'.format(language)
         query = '&q={0}'.format(text_encoded)
