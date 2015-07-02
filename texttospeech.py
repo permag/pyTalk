@@ -44,7 +44,8 @@ class TextToSpeech:
         if self._do_fix_pronunciation:
             text = self.pronunciation_fix(text)
         text = text[:160]  # max length 160 chars
-        text = text.rsplit(' ', 1)[0]  # remove last word that may be broken word.
+        if len(text) is 160:
+            text = text.rsplit(' ', 1)[0]  # remove last word that may be broken word.
         text_encoded = text.replace(' ', '+')  # replace space with +.
         url_base = 'http://translate.google.com/translate_tts'
         lang = '?tl={0}'.format(language)
