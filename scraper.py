@@ -36,7 +36,8 @@ def main(url):
                         break
                 refs.append(ref)
                 ref = ref.find_next(text=True)
-    except:
+    except Exception, e:
+        # print(str(e))
         print('\nCould not parse tag ({0})\n'.format(url))
         return None
 
